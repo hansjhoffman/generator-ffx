@@ -15,8 +15,14 @@
   "keywords": [
     "yeoman-generator"
   ],
+  "repository": "hansjhoffman/generator-x",
+  "license": "MIT",
   "engines": {
     "npm": ">= 4.0.0"
+  },
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "jest"
   },
   "devDependencies": {
     "eslint": "^6.6.0",
@@ -68,11 +74,5 @@
     "plugins": [
       "prettier"
     ]
-  },
-  "scripts": {
-    "pretest": "eslint .",
-    "test": "jest"
-  },
-  "repository": "hansjhoffman/generator-x",
-  "license": "MIT"
+  }
 }

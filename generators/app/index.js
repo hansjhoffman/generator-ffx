@@ -11,11 +11,28 @@ module.exports = class extends Generator {
 
     const prompts = [
       {
-        type: "confirm",
-        name: "someAnswer",
-        message: "Would you like to enable this option?",
-        default: true,
+        type: "input",
+        name: "projectName",
+        message: "Your project name",
+        default: "flatfile-x-config",
       },
+      // {
+      //   type: "select",
+      //   name: "pkgManager",
+      //   message: "Which package manager do you want to use?",
+      //   choices: [
+      //     {
+      //       name: "npm",
+      //       value: "npm",
+      //       description: "npm is the most popular package manager",
+      //     },
+      //     {
+      //       name: "yarn",
+      //       value: "yarn",
+      //       description: "yarn is an awesome package manager",
+      //     },
+      //   ],
+      // },
     ];
 
     return this.prompt(prompts).then((props) => {
@@ -58,5 +75,9 @@ module.exports = class extends Generator {
       bower: false,
       yarn: true,
     });
+  }
+
+  end() {
+    this.log(`${chalk.green("\n\nSee ya!\n")}`);
   }
 };
