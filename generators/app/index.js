@@ -1,6 +1,7 @@
 "use strict";
 const Generator = require("yeoman-generator");
 const chalk = require("chalk");
+const path = require("path");
 const yosay = require("yosay");
 
 module.exports = class extends Generator {
@@ -14,7 +15,7 @@ module.exports = class extends Generator {
         type: "input",
         name: "projectName",
         message: "Your project name",
-        default: "flatfile-x-config",
+        default: process.cwd().split(path.sep).pop() || "flatfile-x-config",
       },
       {
         type: "confirm",
@@ -23,12 +24,13 @@ module.exports = class extends Generator {
       },
       {
         type: "list",
-        name: "language",
-        message: "Do you want to use JavaScript or TypeScript?",
+        name: "template",
+        message: "Choose template",
         default: "ts",
         choices: [
           { name: "JavaScript", value: "js" },
           { name: "TypeScript", value: "ts" },
+          { name: "TypeScript (fp-ts)", value: "fp-ts" },
         ],
       },
       {
@@ -59,19 +61,31 @@ module.exports = class extends Generator {
       name: this.props.projectName,
       license: "UNLICENSED",
       scripts: {
-        dev: "flatfile develop src/main.js",
-        deploy: "flatfile deploy src/main.js",
+        dev: `flatfile develop src/main.${
+          this.props.template === "ts" || this.props.template === "fp-ts"
+            ? "ts"
+            : "js"
+        }`,
+        deploy: `flatfile deploy src/main.${
+          this.props.template === "ts" || this.props.template === "fp-ts"
+            ? "ts"
+            : "js"
+        }`,
       },
       devDependencies: {
         eslint: "^6.6.0",
         flatfile: "^3.4.10",
         prettier: "^2.8.8",
+        typescript:
+          this.props.template === "ts" || this.props.template === "fp-ts"
+            ? "^5"
+            : undefined,
       },
       dependencies: {
         "@flatfile/api": "^1.5.7",
         "@flatfile/listener": "^0.3.3",
         axios: "^1.4.0",
-        typescript: "^5",
+        "fp-ts": this.props.template === "fp-ts" ? "^2.16.0" : undefined,
       },
     };
 
