@@ -50,31 +50,31 @@ module.exports = class extends Generator {
       dependencies: {
         "@flatfile/api": "^1.5.7",
         axios: "^1.4.0",
-        typescript: "^5.1.3",
+        typescript: "^5",
       },
     };
 
-    this.fs.copy(
-      this.templatePath(".editorconfig"),
-      this.destinationPath(".editorconfig"),
-    );
+    // this.fs.copy(
+    //   this.templatePath(".editorconfig"),
+    //   this.destinationPath(".editorconfig"),
+    // );
 
-    this.fs.copy(
-      this.templatePath(".prettierrc.toml"),
-      this.destinationPath(".prettierrc.toml"),
-    );
+    // this.fs.copy(
+    //   this.templatePath(".prettierrc.toml"),
+    //   this.destinationPath(".prettierrc.toml"),
+    // );
 
-    this.fs.copy(this.templatePath("main.ts"), this.destinationPath("main.ts"));
+    // this.fs.copy(this.templatePath("main.ts"), this.destinationPath("main.ts"));
 
-    this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
+    // this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
   }
 
   install() {
-    this.installDependencies({
-      npm: false,
-      bower: false,
-      yarn: true,
-    });
+    // this.installDependencies({
+    //   npm: false,
+    //   bower: false,
+    //   yarn: true,
+    // });
   }
 
   end() {

@@ -34,24 +34,16 @@ targets:
 # Development targets
 # -------------------
 
-.PHONY: build
-build: compile ## Transpile TypeScript
-	yarn esbuild --bundle --platform=node --target=node16 --minify --outfile=dist/main.cjs.min.js src/index.ts
-
 .PHONY: clean
 clean: ## Remove build artifacts
 	rm -rf dist
-
-.PHONY: compile
-compile: ## Run TypeScript compiler
-	yarn tsc
 
 .PHONY: deps
 deps: ## Install all dependencies
 	yarn install
 
 .PHONY: format
-format: ## Format typescript files
+format: ## Format all files
 	yarn prettier --write 'generators/**/*.{js,ts}'
 
 .PHONY: lint

@@ -1,2 +1,23 @@
-node_modules
+# misc
+**/.DS_Store
+.idea
+.vscode
+.nova
+
+# dependencies
+node_modules/
+/.pnp
+.pnp.js
+package-lock.json
+
+# builds
+dist
+
+# tests
 coverage
+
+# logs
+*.log*
+
+# env
+.envrc
