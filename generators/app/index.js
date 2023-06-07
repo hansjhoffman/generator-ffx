@@ -9,12 +9,19 @@ module.exports = class extends Generator {
       yosay(`Welcome to the groovy ${chalk.red("flatfile-x")} generator!`),
     );
 
+    this.includeExamples = true;
+
     const prompts = [
+      // {
+      //   type: "input",
+      //   name: "projectName",
+      //   message: "Your project name",
+      //   default: "flatfile-x-config",
+      // },
       {
-        type: "input",
-        name: "projectName",
-        message: "Your project name",
-        default: "flatfile-x-config",
+        type: "confirm",
+        name: "includeExamples",
+        message: "Would you like to include a folder with examples?",
       },
       // {
       //   type: "select",
@@ -35,16 +42,22 @@ module.exports = class extends Generator {
       // },
     ];
 
-    return this.prompt(prompts).then((props) => {
-      // To access props later use this.props.someAnswer;
-      this.props = props;
+    // return this.prompt(prompts).then((props) => {
+    //   // To access props later use this.props.someAnswer;
+    //   this.props = props;
+    // });
+
+    return this.prompt(prompts).then((answers) => {
+      this.includeExamples = answers.includeExamples;
     });
   }
 
   writing() {
     const pkgJson = {
+      license: "UNLICENSED",
       devDependencies: {
         eslint: "^6.6.0",
+        flatfile: "^3.4.10",
         prettier: "^2.8.8",
       },
       dependencies: {
@@ -53,6 +66,17 @@ module.exports = class extends Generator {
         typescript: "^5",
       },
     };
+
+    // const filesForCopy = [
+    //   ".editorconfig",
+    //   ".prettierrc.toml",
+    //   "tsconfig.json",
+    //   "src",
+    // ];
+
+    // filesForCopy.map((f) => {
+    //   this.fs.copy(this.templatePath(f), this.destinationPath(f));
+    // });
 
     // this.fs.copy(
     //   this.templatePath(".editorconfig"),
