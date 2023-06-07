@@ -7,7 +7,7 @@ module.exports = class extends Generator {
   prompting() {
     // Have Yeoman greet the user.
     this.log(
-      yosay(`Welcome to the groovy ${chalk.red("generator-x")} generator!`)
+      yosay(`Welcome to the groovy ${chalk.red("generator-x")} generator!`),
     );
 
     const prompts = [
@@ -15,11 +15,11 @@ module.exports = class extends Generator {
         type: "confirm",
         name: "someAnswer",
         message: "Would you like to enable this option?",
-        default: true
-      }
+        default: true,
+      },
     ];
 
-    return this.prompt(prompts).then(props => {
+    return this.prompt(prompts).then((props) => {
       // To access props later use this.props.someAnswer;
       this.props = props;
     });
@@ -27,12 +27,12 @@ module.exports = class extends Generator {
 
   writing() {
     this.fs.copy(
-      this.templatePath("dummyfile.txt"),
-      this.destinationPath("dummyfile.txt")
+      this.templatePath(".editorconfig"),
+      this.destinationPath(".editorconfig"),
     );
   }
 
   install() {
-    this.installDependencies();
+    // This.installDependencies();
   }
 };
