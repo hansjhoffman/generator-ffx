@@ -5,9 +5,8 @@ const yosay = require("yosay");
 
 module.exports = class extends Generator {
   prompting() {
-    // Have Yeoman greet the user.
     this.log(
-      yosay(`Welcome to the groovy ${chalk.red("generator-x")} generator!`),
+      yosay(`Welcome to the groovy ${chalk.red("flatfile-x")} generator!`),
     );
 
     const prompts = [
@@ -26,13 +25,38 @@ module.exports = class extends Generator {
   }
 
   writing() {
+    const pkgJson = {
+      devDependencies: {
+        eslint: "^6.6.0",
+        prettier: "^2.8.8",
+      },
+      dependencies: {
+        "@flatfile/api": "^1.5.7",
+        axios: "^1.4.0",
+        typescript: "^5.1.3",
+      },
+    };
+
     this.fs.copy(
       this.templatePath(".editorconfig"),
       this.destinationPath(".editorconfig"),
     );
+
+    this.fs.copy(
+      this.templatePath(".prettierrc.toml"),
+      this.destinationPath(".prettierrc.toml"),
+    );
+
+    this.fs.copy(this.templatePath("main.ts"), this.destinationPath("main.ts"));
+
+    this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
   }
 
   install() {
-    // This.installDependencies();
+    this.installDependencies({
+      npm: false,
+      bower: false,
+      yarn: true,
+    });
   }
 };
