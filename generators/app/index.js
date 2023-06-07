@@ -117,6 +117,7 @@ module.exports = class extends Generator {
       ".prettierrc.toml",
       "tsconfig.json",
       "src",
+      // this.props.includeTests && "test",
     ];
 
     filesForCopy.map((f) => {
