@@ -49,6 +49,11 @@ module.exports = class extends Generator {
         ],
         default: "yarn",
       },
+      {
+        type: "confirm",
+        name: "includeTests",
+        message: "Would you auto-configure tests?",
+      },
     ];
 
     return this.prompt(prompts).then((props) => {
@@ -59,7 +64,17 @@ module.exports = class extends Generator {
   writing() {
     const pkgJson = {
       name: this.props.projectName,
+      version: "0.0.0",
+      description: "",
       license: "UNLICENSED",
+      engines: {
+        node: ">=16.0.0",
+      },
+      main: `src/main.${
+        this.props.template === "ts" || this.props.template === "fp-ts"
+          ? "ts"
+          : "js"
+      }`,
       scripts: {
         dev: `flatfile develop src/main.${
           this.props.template === "ts" || this.props.template === "fp-ts"
@@ -73,8 +88,13 @@ module.exports = class extends Generator {
         }`,
       },
       devDependencies: {
+        "@types/node":
+          this.props.template === "ts" || this.props.template === "fp-ts"
+            ? "^18"
+            : undefined,
         eslint: "^6.6.0",
         flatfile: "^3.4.10",
+        "lint-staged": "^13.2.2",
         prettier: "^2.8.8",
         typescript:
           this.props.template === "ts" || this.props.template === "fp-ts"
@@ -86,6 +106,9 @@ module.exports = class extends Generator {
         "@flatfile/listener": "^0.3.3",
         axios: "^1.4.0",
         "fp-ts": this.props.template === "fp-ts" ? "^2.16.0" : undefined,
+      },
+      "lint-staged": {
+        "**/*.{js,ts}": ["eslint --fix", "prettier --write"],
       },
     };
 
