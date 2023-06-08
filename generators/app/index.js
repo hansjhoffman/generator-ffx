@@ -14,7 +14,7 @@ module.exports = class extends Generator {
 
   prompting() {
     this.log(
-      yosay(`Welcome to the badass ${chalk.red("flatfile-ffx")} generator!`),
+      yosay(`Welcome to the badass ${chalk.red("Flatfile 'X'")} generator!`),
     );
 
     const prompts = [
@@ -64,6 +64,30 @@ module.exports = class extends Generator {
         default: "yarn",
       },
       {
+        type: "list",
+        name: "envManager",
+        message: "Which environment manger do you want to use?",
+        choices: [
+          {
+            name: "asdf",
+            value: "asdf",
+          },
+          {
+            name: "nix",
+            value: "nix",
+          },
+          {
+            name: "nvm",
+            value: "nvm",
+          },
+          {
+            name: "volta",
+            value: "volta",
+          },
+        ],
+        default: "nix",
+      },
+      {
         type: "confirm",
         name: "includeExamples",
         message: "Would you like to include a folder with examples?",
@@ -100,10 +124,10 @@ module.exports = class extends Generator {
       main: `src/main.${this._getFileExtension()}`,
       scripts: {
         dev: `flatfile develop src/main.${this._getFileExtension()}`,
-        deploy: `flatfile deploy src/main.${this._getFileExtension()}`,
-        format: `prettier --write '{src,test}/**/*.${this._getFileExtension()}'`,
-        lint: `eslint '{src,test}/**/*.${this._getFileExtension()}'`,
-        "lint:fix": `eslint '{src,test}/**/*.${this._getFileExtension()}' --fix`,
+        format: `prettier --write '{src,test,examples}/**/*.${this._getFileExtension()}'`,
+        lint: `eslint '{src,test,examples}/**/*.${this._getFileExtension()}'`,
+        "lint:fix": `eslint '{src,test,examples}/**/*.${this._getFileExtension()}' --fix`,
+        publish: `flatfile deploy src/main.${this._getFileExtension()}`,
         test: this.props.includeTests ? "jest" : undefined,
         "test:watch": this.props.includeTests ? "jest --watch" : undefined,
       },
@@ -116,6 +140,10 @@ module.exports = class extends Generator {
         "@typescript-eslint/parser": this._isTypeScript()
           ? "^5.59.9"
           : undefined,
+        "esbuild-jest":
+          this._isTypeScript() && this.props.includeTests
+            ? "^0.5.0"
+            : undefined,
         eslint: "^6.6.0",
         "eslint-plugin-import": "^2.27.5",
         "eslint-plugin-prettier": "^4.2.1",
@@ -123,6 +151,10 @@ module.exports = class extends Generator {
         jest: this.props.includeTests ? "^29.5.0" : undefined,
         "lint-staged": "^13.2.2",
         prettier: "^2.8.8",
+        "ts-node":
+          this._isTypeScript() && this.props.includeTests
+            ? "^10.9.1"
+            : undefined,
         typescript: this._isTypeScript() ? "^5" : undefined,
       },
       dependencies: {
@@ -173,6 +205,11 @@ module.exports = class extends Generator {
           this.templatePath("ts/test"),
           this.destinationPath("test"),
         );
+
+        this.fs.copy(
+          this.templatePath("ts/jest.config.ts"),
+          this.destinationPath("jest.config.ts"),
+        );
       }
 
       if (this.props.includeExamples) {
@@ -218,6 +255,11 @@ module.exports = class extends Generator {
         this.fs.copy(
           this.templatePath("js/test"),
           this.destinationPath("test"),
+        );
+
+        this.fs.copy(
+          this.templatePath("js/jest.config.js"),
+          this.destinationPath("jest.config.js"),
         );
       }
 
