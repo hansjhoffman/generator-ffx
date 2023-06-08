@@ -5,6 +5,13 @@ const path = require("path");
 const yosay = require("yosay");
 
 module.exports = class extends Generator {
+  constructor(args, opts) {
+    super(args, opts);
+
+    this.testDirectory = "test";
+    this.srcDirectory = "src";
+  }
+
   prompting() {
     this.log(
       yosay(`Welcome to the badass ${chalk.red("flatfile-ffx")} generator!`),
@@ -17,11 +24,18 @@ module.exports = class extends Generator {
         message: "Your project name",
         default: process.cwd().split(path.sep).pop() || "flatfile-x-config",
       },
-      {
-        type: "confirm",
-        name: "includeExamples",
-        message: "Would you like to include a folder with examples?",
-      },
+      // {
+      //   type: "input",
+      //   name: "author",
+      //   message: "Author",
+      //   default: this.git.name() || "",
+      // },
+      // {
+      //   type: "input",
+      //   name: "email",
+      //   message: "Email",
+      //   default: this.git.email() || "",
+      // },
       {
         type: "list",
         name: "template",
@@ -48,6 +62,11 @@ module.exports = class extends Generator {
           },
         ],
         default: "yarn",
+      },
+      {
+        type: "confirm",
+        name: "includeExamples",
+        message: "Would you like to include a folder with examples?",
       },
       {
         type: "confirm",
@@ -116,45 +135,103 @@ module.exports = class extends Generator {
       },
     };
 
-    this.fs.copy(
-      this.templatePath("_editorconfig"),
-      this.destinationPath(".editorconfig"),
-    );
-
-    this.fs.copy(
-      this.templatePath("_env.example"),
-      this.destinationPath(".env.example"),
-    );
-
-    this.fs.copy(
-      this.templatePath("_gitignore"),
-      this.destinationPath(".gitignore"),
-    );
-
-    this.fs.copy(
-      this.templatePath("_prettierrc.toml"),
-      this.destinationPath(".prettierrc.toml"),
-    );
-
-    // fix this to copy 1 for JS and another for TS
-    this.fs.copy(
-      this.templatePath("_eslintrc.js"),
-      this.destinationPath(".eslintrc.js"),
-    );
-
     if (this._isTypeScript()) {
       this.fs.copy(
-        this.templatePath("_tsconfig.json"),
+        this.templatePath("ts/_editorconfig"),
+        this.destinationPath(".editorconfig"),
+      );
+
+      this.fs.copy(
+        this.templatePath("ts/_env.example"),
+        this.destinationPath(".env.example"),
+      );
+
+      this.fs.copy(
+        this.templatePath("ts/_gitignore"),
+        this.destinationPath(".gitignore"),
+      );
+
+      this.fs.copy(
+        this.templatePath("ts/_prettierrc.toml"),
+        this.destinationPath(".prettierrc.toml"),
+      );
+
+      this.fs.copy(
+        this.templatePath("ts/_eslintrc.js"),
+        this.destinationPath(".eslintrc.js"),
+      );
+
+      this.fs.copy(
+        this.templatePath("ts/_tsconfig.json"),
         this.destinationPath("tsconfig.json"),
       );
-    }
 
-    // fix this to copy 1 for JS and another for TS
-    this.fs.copy(this.templatePath("src"), this.destinationPath("src"));
+      this.fs.copy(this.templatePath("ts/src"), this.destinationPath("src"));
 
-    // fix this to copy 1 for JS and another for TS
-    if (this.props.includeTests) {
-      this.fs.copy(this.templatePath("test"), this.destinationPath("test"));
+      if (this.props.includeTests) {
+        this.fs.copy(
+          this.templatePath("ts/test"),
+          this.destinationPath("test"),
+        );
+      }
+
+      if (this.props.includeExamples) {
+        this.fs.copy(
+          this.templatePath("ts/examples"),
+          this.destinationPath("examples"),
+        );
+      }
+
+      // this.fs.copyTpl(
+      //   this.templatePath("js/README.md"),
+      //   this.destinationPath("", "README.md"),
+      // );
+    } else {
+      this.fs.copy(
+        this.templatePath("js/_editorconfig"),
+        this.destinationPath(".editorconfig"),
+      );
+
+      this.fs.copy(
+        this.templatePath("js/_env.example"),
+        this.destinationPath(".env.example"),
+      );
+
+      this.fs.copy(
+        this.templatePath("js/_gitignore"),
+        this.destinationPath(".gitignore"),
+      );
+
+      this.fs.copy(
+        this.templatePath("js/_prettierrc.toml"),
+        this.destinationPath(".prettierrc.toml"),
+      );
+
+      this.fs.copy(
+        this.templatePath("js/_eslintrc.js"),
+        this.destinationPath(".eslintrc.js"),
+      );
+
+      this.fs.copy(this.templatePath("js/src"), this.destinationPath("src"));
+
+      if (this.props.includeTests) {
+        this.fs.copy(
+          this.templatePath("js/test"),
+          this.destinationPath("test"),
+        );
+      }
+
+      if (this.props.includeExamples) {
+        this.fs.copy(
+          this.templatePath("js/examples"),
+          this.destinationPath("examples"),
+        );
+      }
+
+      // this.fs.copyTpl(
+      //   this.templatePath("js/README.md"),
+      //   this.destinationPath("", "README.md"),
+      // );
     }
 
     this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
