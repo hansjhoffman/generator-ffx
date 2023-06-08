@@ -7,7 +7,7 @@ const yosay = require("yosay");
 module.exports = class extends Generator {
   prompting() {
     this.log(
-      yosay(`Welcome to the groovy ${chalk.red("flatfile-ffx")} generator!`),
+      yosay(`Welcome to the badass ${chalk.red("flatfile-ffx")} generator!`),
     );
 
     const prompts = [
@@ -112,39 +112,39 @@ module.exports = class extends Generator {
         "fp-ts": this.props.template === "fp-ts" ? "^2.16.0" : undefined,
       },
       "lint-staged": {
-        "**/*.{js,ts}": ["eslint --fix", "prettier --write"],
+        "**/*.{js,json,ts}": ["eslint --fix", "prettier --write"],
       },
     };
 
     this.fs.copy(
-      this.templatePath(".editorconfig"),
+      this.templatePath("_editorconfig"),
       this.destinationPath(".editorconfig"),
     );
 
     this.fs.copy(
-      this.templatePath(".env.example"),
+      this.templatePath("_env.example"),
       this.destinationPath(".env.example"),
     );
 
     this.fs.copy(
-      this.templatePath(".gitignore"),
+      this.templatePath("_gitignore"),
       this.destinationPath(".gitignore"),
     );
 
     this.fs.copy(
-      this.templatePath(".prettierrc.toml"),
+      this.templatePath("_prettierrc.toml"),
       this.destinationPath(".prettierrc.toml"),
     );
 
     // fix this to copy 1 for JS and another for TS
     this.fs.copy(
-      this.templatePath(".eslintrc.js"),
+      this.templatePath("_eslintrc.js"),
       this.destinationPath(".eslintrc.js"),
     );
 
     if (this._isTypeScript()) {
       this.fs.copy(
-        this.templatePath("tsconfig.json"),
+        this.templatePath("_tsconfig.json"),
         this.destinationPath("tsconfig.json"),
       );
     }
