@@ -120,6 +120,7 @@ module.exports = class extends Generator {
       name: this.props.projectName,
       version: "0.0.0",
       description: "Flatfile X configuration",
+      private: true,
       license: "UNLICENSED",
       engines: {
         node: ">=16.0.0",
