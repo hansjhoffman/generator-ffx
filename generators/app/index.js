@@ -10,6 +10,7 @@ module.exports = class extends Generator {
 
     this.testDirectory = "test";
     this.srcDirectory = "src";
+    this.examplesDirectory = "examples";
   }
 
   prompting() {
@@ -200,12 +201,15 @@ module.exports = class extends Generator {
         this.destinationPath("tsconfig.json"),
       );
 
-      this.fs.copy(this.templatePath("ts/src"), this.destinationPath("src"));
+      this.fs.copy(
+        this.templatePath("ts/src"),
+        this.destinationPath(this.srcDirectory),
+      );
 
       if (this.props.includeTests) {
         this.fs.copy(
           this.templatePath("ts/test"),
-          this.destinationPath("test"),
+          this.destinationPath(this.testDirectory),
         );
 
         this.fs.copy(
@@ -217,7 +221,7 @@ module.exports = class extends Generator {
       if (this.props.includeExamples) {
         this.fs.copy(
           this.templatePath("ts/examples"),
-          this.destinationPath("examples"),
+          this.destinationPath(this.examplesDirectory),
         );
       }
 
@@ -252,12 +256,15 @@ module.exports = class extends Generator {
         this.destinationPath(".eslintrc.js"),
       );
 
-      this.fs.copy(this.templatePath("js/src"), this.destinationPath("src"));
+      this.fs.copy(
+        this.templatePath("js/src"),
+        this.destinationPath(this.srcDirectory),
+      );
 
       if (this.props.includeTests) {
         this.fs.copy(
           this.templatePath("js/test"),
-          this.destinationPath("test"),
+          this.destinationPath(this.testDirectory),
         );
 
         this.fs.copy(
@@ -269,7 +276,7 @@ module.exports = class extends Generator {
       if (this.props.includeExamples) {
         this.fs.copy(
           this.templatePath("js/examples"),
-          this.destinationPath("examples"),
+          this.destinationPath(this.examplesDirectory),
         );
       }
 
