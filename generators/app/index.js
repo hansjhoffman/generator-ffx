@@ -123,11 +123,14 @@ module.exports = class extends Generator {
       },
       main: `src/main.${this._getFileExtension()}`,
       scripts: {
+        compile: this._isTypeScript() ? "tsc" : undefined,
+        deploy:
+          `${this._isTypeScript() ? "yarn compile && " : ""}` +
+          `flatfile deploy src/main.${this._getFileExtension()}`,
         dev: `flatfile develop src/main.${this._getFileExtension()}`,
         format: `prettier --write '{src,test,examples}/**/*.${this._getFileExtension()}'`,
         lint: `eslint '{src,test,examples}/**/*.${this._getFileExtension()}'`,
         "lint:fix": `eslint '{src,test,examples}/**/*.${this._getFileExtension()}' --fix`,
-        publish: `flatfile deploy src/main.${this._getFileExtension()}`,
         test: this.props.includeTests ? "jest" : undefined,
         "test:watch": this.props.includeTests ? "jest --watch" : undefined,
       },
@@ -165,6 +168,14 @@ module.exports = class extends Generator {
       "lint-staged": {
         "**/*.{js,json,ts}": ["eslint --fix", "prettier --write"],
       },
+      volta:
+        this.props.envManager === "volta"
+          ? {
+              node: "18.12.1",
+              npm: this.props.pkgManager === "npm" ? "8.19.2" : undefined,
+              yarn: this.props.pkgManager === "yarn" ? "1.22.19" : undefined,
+            }
+          : undefined,
     };
 
     if (this._isTypeScript()) {
@@ -277,9 +288,52 @@ module.exports = class extends Generator {
     }
 
     this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
+
+    this.fs.extendJSON(this.destinationPath("package.json"), {
+      volta:
+        this.props.envManager === "volta"
+          ? {
+              node: "18.12.1",
+              npm: this.props.pkgManager === "npm" ? "8.19.2" : undefined,
+              yarn: this.props.pkgManager === "yarn" ? "1.22.19" : undefined,
+            }
+          : undefined,
+    });
+
+    if (this.props.envManager === "nvm") {
+      this.fs.copy(this.templatePath("_nvmrc"), this.destinationPath(".nvmrc"));
+    }
+
+    if (this.props.envManager === "asdf") {
+      this.fs.copy(
+        this.templatePath("_tool-versions"),
+        this.destinationPath(".tool-versions"),
+      );
+    }
+
+    if (this.props.envManager === "nix") {
+      this.fs.copy(
+        this.templatePath("_shell.nix"),
+        this.destinationPath("shell.nix"),
+      );
+
+      this.fs.copy(
+        this.templatePath("_envrc.example"),
+        this.destinationPath(".envrc.example"),
+      );
+
+      this.fs.copy(
+        this.templatePath("_envrc.example"),
+        this.destinationPath(".envrc"),
+      );
+
+      this.fs.copy(this.templatePath("_nix"), this.destinationPath("nix"));
+    }
   }
 
   install() {
+    this._envSetup(); // this needs to wait for completion before proceeding
+
     this.installDependencies({
       npm: this.props.pkgManager === "npm",
       bower: false,
@@ -294,6 +348,16 @@ module.exports = class extends Generator {
       this.spawnCommandSync("git", ["init"]);
       this.spawnCommandSync("git", ["add", "--all"]);
       this.spawnCommandSync("git", ["commit", "-m", "initial"]);
+    }
+  }
+
+  _envSetup() {
+    if (this.props.envManager === "nvm") {
+      this.spawnCommandSync("nvm", ["use"]);
+    }
+
+    if (this.props.envManager === "nix") {
+      this.spawnCommandSync("direnv", ["allow"]);
     }
   }
 
