@@ -30,7 +30,7 @@ From the root directory of this project, run `yarn link` to make the generator l
 
 ## License
 
-MIT © [Hans Hoffman]()
+BSD 3 © [Hans Hoffman]()
 
 [npm-image]: https://badge.fury.io/js/generator-ffx.svg
 [npm-url]: https://npmjs.org/package/generator-ffx
