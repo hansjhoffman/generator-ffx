@@ -1,4 +1,4 @@
-# generator-ffx [![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# generator-ffx [![NPM version][npm-image]][npm-url]
 
 >
 
@@ -34,5 +34,3 @@ BSD 3 © [Hans Hoffman]()
 
 [npm-image]: https://badge.fury.io/js/generator-ffx.svg
 [npm-url]: https://npmjs.org/package/generator-ffx
-[daviddm-image]: https://david-dm.org/hansjhoffman/generator-ffx.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/hansjhoffman/generator-ffx
