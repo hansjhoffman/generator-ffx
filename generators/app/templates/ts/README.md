@@ -1,10 +1,18 @@
-# <%= name %>
+# <%= projectName %>
 
-> <%= description %>
+> Flatfile X configuration
 
-## Getting Started
+## Local Development
 
-Getting up and running is as easy as 1, 2, 3.
+Run `yarn dev` to publish your code in development mode.
+
+## Publish to Production
+
+Run `yarn deploy` to publish your code.
+
+## Testing
+
+Simply run `yarn test` and all your tests in the `test/` directory will be run.
 
 ## Help
 

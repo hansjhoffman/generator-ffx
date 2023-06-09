@@ -91,11 +91,13 @@ module.exports = class extends Generator {
         type: "confirm",
         name: "includeExamples",
         message: "Would you like to include a folder with examples?",
+        default: true,
       },
       {
         type: "confirm",
         name: "includeTests",
         message: "Would you auto-configure tests?",
+        default: true,
       },
     ];
 
@@ -165,17 +167,6 @@ module.exports = class extends Generator {
         "@flatfile/listener": "^0.3.3",
         "fp-ts": this.props.template === "fp-ts" ? "^2.16.0" : undefined,
       },
-      "lint-staged": {
-        "**/*.{js,json,ts}": ["eslint --fix", "prettier --write"],
-      },
-      volta:
-        this.props.envManager === "volta"
-          ? {
-              node: "18.12.1",
-              npm: this.props.pkgManager === "npm" ? "8.19.2" : undefined,
-              yarn: this.props.pkgManager === "yarn" ? "1.22.19" : undefined,
-            }
-          : undefined,
     };
 
     if (this._isTypeScript()) {
@@ -230,10 +221,11 @@ module.exports = class extends Generator {
         );
       }
 
-      // this.fs.copyTpl(
-      //   this.templatePath("js/README.md"),
-      //   this.destinationPath("", "README.md"),
-      // );
+      this.fs.copyTpl(
+        this.templatePath("ts/README.md"),
+        this.destinationPath("README.md"),
+        this.props,
+      );
     } else {
       this.fs.copy(
         this.templatePath("js/_editorconfig"),
@@ -281,13 +273,29 @@ module.exports = class extends Generator {
         );
       }
 
-      // this.fs.copyTpl(
-      //   this.templatePath("js/README.md"),
-      //   this.destinationPath("", "README.md"),
-      // );
+      this.fs.copyTpl(
+        this.templatePath("js/README.md"),
+        this.destinationPath("README.md"),
+        this.props,
+      );
     }
 
     this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
+
+    this.fs.extendJSON(
+      this.destinationPath("package.json"),
+      this._isTypeScript()
+        ? {
+            "lint-staged": {
+              "**/*.{json,ts}": ["eslint --fix", "prettier --write"],
+            },
+          }
+        : {
+            "lint-staged": {
+              "**/*.{js,json}": ["eslint --fix", "prettier --write"],
+            },
+          },
+    );
 
     this.fs.extendJSON(this.destinationPath("package.json"), {
       volta:
